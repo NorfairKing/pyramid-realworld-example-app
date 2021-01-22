@@ -1,0 +1,19 @@
+name: Update packages
+on:
+  schedule:
+    # On the first of every month
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+    # Manually trigger from the "Actions" tab
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cachix/install-nix-action@v12
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz
+        run: |
+          nix-shell -p git poetry nix-prefetch-github gitAndTools.hub --run .github/workflows/update.sh
