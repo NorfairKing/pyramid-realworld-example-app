@@ -8,7 +8,7 @@ NIXPKGS_BRANCH=nixos-20.09
 git fetch --unshallow
 
 # Update the nixpkgs.json with the latest version of the branch
-nix-prefetch-github --rev "refs/heads/$NIXPKGS_BRANCH" NixOS nixpkgs > nixpkgs.json
+niv update nixpkgs
 
 # Update Python packages
 poetry update

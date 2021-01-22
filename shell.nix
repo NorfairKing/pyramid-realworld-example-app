@@ -28,6 +28,8 @@ let
     micro
     tmux
     curl
+    niv
+    poetry
   ]
 
   # The watchdog Python lib has a few extra requirements on Darwin (MacOS)
