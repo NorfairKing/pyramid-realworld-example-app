@@ -71,17 +71,17 @@ let
   ];
 in
 
-stdenv.mkDerivation {
+stdenv.mkShell {
   name = "dev-shell";
   buildInputs = dependencies;
-
+  buildHook = ''
   # Needed to be able to install Python packages from GitHub
-  GIT_SSL_CAINFO = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+  export GIT_SSL_CAINFO="${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
 
   # Such that nixpkgs doesn't need to be downloaded again when running we make
   # it a dependency of the derivation. Also allows using `nix-shell -p` with the
   # correct nixpkgs version
-  NIX_PATH = "nixpkgs=${nixpkgs}";
+  export NIX_PATH="nixpkgs=${nixpkgs}:$NIX_PATH";
 
   # By default, all files from the Nix store (which have a timestamp of the
   # UNIX epoch of January 1, 1970) are included in the .ZIP, but .ZIP archives
@@ -89,5 +89,6 @@ stdenv.mkDerivation {
   # `bdist_wheel` reads the SOURCE_DATE_EPOCH environment variable, which
   # nix-shell sets to 1. Giving it a value corresponding to 1980 enables
   # building wheels.
-  SOURCE_DATE_EPOCH = 315532800;
+  export SOURCE_DATE_EPOCH=315532800;
+  '';
 }
